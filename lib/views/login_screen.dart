@@ -76,7 +76,6 @@ class _LoginViewState extends State<Login> {
                               Navigator.of(context).pop();
                             } catch (err) {
                               print(err);
-                              // TODO: Add snackbar reporting error
                             }
                           },
                         ),
@@ -203,14 +202,22 @@ class _LoginViewState extends State<Login> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setString('displayName', user.user.displayName);
             Navigator.of(context).pushNamed(AppRoutes.menu);
-          } on FirebaseAuthException catch (e) {
-            if (e.code == 'weak-password') {
-              print('The password provided is too weak.');
-            } else if (e.code == 'email-already-in-use') {
-              print('The account already exists for that email.');
+          } on FirebaseAuthException catch (err) {
+            switch (err.code) {
+              case "wrong-password":
+                print('Wrong password.');
+                break;
+
+              case "weak-password":
+                print('The password provided is too weak.');
+                break;
+
+              case 'email-already-in-use':
+                print('The account already exists for that email.');
+                break;
             }
-          } catch (e) {
-            print(e.toString());
+          } catch (err) {
+            print(err.toString());
           }
         },
       ),

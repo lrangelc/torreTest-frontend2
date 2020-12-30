@@ -50,8 +50,8 @@ class MenuScreenState extends State<MenuScreen> {
               body: TabBarView(
                 children: <Widget>[
                   VideoScreen(),
-                  AricleScreen(),
                   ProfileScreen(),
+                  ArticleScreen(),
                 ],
               ),
             ),

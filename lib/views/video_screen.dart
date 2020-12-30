@@ -17,7 +17,7 @@ class VideoScreenState extends State<VideoScreen> {
     return Scaffold(
       floatingActionButton: null,
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('Videos').snapshots(),
+          stream: FirebaseFirestore.instance.collection('videos').snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {

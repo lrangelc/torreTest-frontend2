@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class AricleScreen extends StatefulWidget {
-  AricleScreen();
+class ArticleScreen extends StatefulWidget {
+  ArticleScreen();
 
   @override
-  AricleScreenState createState() => AricleScreenState();
+  ArticleScreenState createState() => ArticleScreenState();
 }
 
-class AricleScreenState extends State<AricleScreen> {
-  AricleScreenState();
+class ArticleScreenState extends State<ArticleScreen> {
+  ArticleScreenState();
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -25,17 +25,17 @@ class AricleScreenState extends State<AricleScreen> {
     return Scaffold(
       floatingActionButton: null,
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('Articles').snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        stream: FirebaseFirestore.instance.collection('articles').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-            return ListView(
-              children: snapshot.data.docs.map((document) {
+          return ListView(
+            children: snapshot.data.docs.map(
+              (document) {
                 print(document.data()['url'].toString());
                 return Padding(
                   padding: EdgeInsets.only(top: 15),
@@ -53,30 +53,35 @@ class AricleScreenState extends State<AricleScreen> {
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(document.data()['title'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                )),
+                            child: Text(
+                              document.data()['title'],
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                           Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: CachedNetworkImage(
-                                imageUrl: document.data()['image'],
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                ),
-                              )),
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: CachedNetworkImage(
+                              imageUrl: document.data()['image'],
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 );
-              }).toList(),
-            );
-          }),
+              },
+            ).toList(),
+          );
+        },
+      ),
     );
   }
 }
