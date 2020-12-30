@@ -1,281 +1,417 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:torre_test2/widgets/custom_alert_dialog.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:torre_test2/net/firebase.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen();
-
   @override
-  ProfileScreenState createState() => ProfileScreenState();
+  MapScreenState createState() => MapScreenState();
 }
 
-class ProfileScreenState extends State<ProfileScreen> {
-  ProfileScreenState();
+class MapScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
+  bool _status = true;
+  final FocusNode myFocusNode = FocusNode();
+  String displayName = "";
+  String email = "";
+  TextEditingController _displayName;
+  TextEditingController _email;
+  DocumentSnapshot user;
 
+  @override
+  void initState() {
+    super.initState();
+    _displayName = TextEditingController();
+    _email = TextEditingController();
+    getData();
+  }
+
+  getData() async {
+    try {
+      FirebaseAuth.instance.authStateChanges().listen((User user) {
+        if (user == null) {
+          print('User is currently signed out!');
+        } else {
+          print('User is signed in!');
+        }
+      });
+    } catch (err) {
+      print(err.message);
+    }
+
+    user = await getUser();
+    if (user.exists) {
+      displayName = user.data()['displayName'];
+      email = user.data()['email'];
+    } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      displayName = prefs.getString('displayName');
+    }
+    setState(() {
+      _displayName.text = this.displayName;
+      _email.text = this.email;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    void showAvatarEditor() {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return CustomAlertDialog(
-              content: Container(
-                height: MediaQuery.of(context).size.height / 3,
-                width: MediaQuery.of(context).size.width / 1.2,
+    return Scaffold(
+        body: Container(
+      color: Colors.white,
+      child: ListView(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Container(
+                height: 250.0,
+                color: Colors.white,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Expanded(
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          MaterialButton(
-                            onPressed: () {
-                              print("Selected 1");
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: Colors.white,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                height: MediaQuery.of(context).size.width / 5,
-                                child: Image.asset(
-                                  "avatar1.png",
-                                  height: 30,
-                                ),
+                          Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.black,
+                            size: 22.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 25.0),
+                            child: Text(
+                              'Profile',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.black,
                               ),
                             ),
-                          ),
-                          MaterialButton(
-                            onPressed: () {
-                              print("Selected 2");
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: Colors.white,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                height: MediaQuery.of(context).size.width / 5,
-                                child: Image.asset(
-                                  "avatar2.png",
-                                  height: 30,
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: Stack(
+                        fit: StackFit.loose,
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: 140.0,
+                                height: 140.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image:
+                                        ExactAssetImage('assets/avatar2.png'),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                          MaterialButton(
-                            onPressed: () {
-                              print("Selected 3");
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: Colors.white,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                height: MediaQuery.of(context).size.width / 5,
-                                child: Image.asset(
-                                  "avatar3.png",
-                                  height: 30,
-                                ),
-                              ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 90.0, right: 100.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                CircleAvatar(
+                                  backgroundColor: Color(0xff8c52ff),
+                                  radius: 25.0,
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(25.0),
-                      color: Colors.white,
-                      child: MaterialButton(
-                        minWidth: MediaQuery.of(context).size.width / 2,
-                        padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 15.0),
-                        child: Text(
-                          "Close",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
+                    )
                   ],
                 ),
               ),
-            );
-          });
-    }
-
-    Future<Widget> _getImage(BuildContext context, String imageName) async {
-      Image image;
-      await FireStorageService.loadImage(context, imageName).then((value) {
-        image = Image.network(
-          value.toString(),
-          fit: BoxFit.scaleDown,
-        );
-      });
-      return image;
-    }
-
-    listCell(title, url) {
-      return Column(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width / 1.2,
-            height: MediaQuery.of(context).size.height / 3.5,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(title, style: TextStyle(fontSize: 18)),
-                CachedNetworkImage(
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  imageUrl: url,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height / 30),
-        ],
-      );
-    }
-
-    return Scaffold(
-      floatingActionButton: null,
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.black12,
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height / 5,
-            child: Material(
-              color: Color(0xff8c52ff),
-              borderRadius: BorderRadius.circular(25.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height / 1.2,
-                width: MediaQuery.of(context).size.width,
+              Container(
+                color: Color(0xffFFFFFF),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 70),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Torre Test",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                          ),
+                  padding: EdgeInsets.only(bottom: 25.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 25.0,
+                          right: 25.0,
+                          top: 25.0,
                         ),
-                        Text(
-                          "Member: 36 Weeks",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: 50,
-                              bottom: 100,
-                            ),
-                            child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                listCell("test1",
-                                    "https://miro.medium.com/max/700/1*X6pU3XP7Yr6-CW9AIu3xyg.jpeg"),
-                                listCell("test2",
-                                    "https://miro.medium.com/max/700/1*X6pU3XP7Yr6-CW9AIu3xyg.jpeg"),
-                                listCell("test3",
-                                    "https://miro.medium.com/max/700/1*X6pU3XP7Yr6-CW9AIu3xyg.jpeg"),
-                                listCell("test4",
-                                    "https://miro.medium.com/max/700/1*X6pU3XP7Yr6-CW9AIu3xyg.jpeg"),
+                                Text(
+                                  'Personal Information',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                _status ? _getEditIcon() : Container(),
+                              ],
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  'Name',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Flexible(
+                              child: TextField(
+                                controller: _displayName,
+                                decoration: const InputDecoration(
+                                  hintText: "Enter Your Name",
+                                ),
+                                enabled: !_status,
+                                autofocus: !_status,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  'Email ID',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 25.0,
+                          right: 25.0,
+                          top: 2.0,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Flexible(
+                              child: TextField(
+                                controller: _email,
+                                decoration: const InputDecoration(
+                                    hintText: "Enter Email ID"),
+                                enabled: !_status,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'Mobile',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 25.0,
+                          right: 25.0,
+                          top: 2.0,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Flexible(
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  hintText: "Enter Mobile Number",
+                                ),
+                                enabled: !_status,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 25.0,
+                          right: 25.0,
+                          top: 25.0,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.logout),
+                              tooltip: 'Logout',
+                              onPressed: () {
+                                FirebaseAuth.instance.signOut();
+                              },
+                            ),
+                            Text('Logout')
+                          ],
+                        ),
+                      ),
+                      !_status ? _getActionButtons() : Container(),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    ));
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the Widget is disposed
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  Widget _getActionButtons() {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Container(
+                  child: RaisedButton(
+                child: Text("Save"),
+                textColor: Colors.white,
+                color: Colors.green,
+                onPressed: () {
+                  updateUser(_displayName.text);
+                  setState(() {
+                    _status = true;
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  });
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+              )),
+            ),
+            flex: 2,
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Container(
+                child: RaisedButton(
+                  child: Text("Cancel"),
+                  textColor: Colors.white,
+                  color: Color(0xff8c52ff),
+                  onPressed: () {
+                    setState(() {
+                      _status = true;
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    });
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2.8,
-            top: MediaQuery.of(context).size.height / 7,
-            child: Material(
-              borderRadius: BorderRadius.circular(25.0),
-              color: Colors.white,
-              child: Container(
-                width: MediaQuery.of(context).size.width / 3.5,
-                height: MediaQuery.of(context).size.width / 3.5,
-                child: FutureBuilder(
-                    future: _getImage(context, "avatar3.png"),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          height: MediaQuery.of(context).size.width / 1.2,
-                          child: snapshot.data,
-                        );
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          height: MediaQuery.of(context).size.width / 1.2,
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
-                      return Container();
-                    }),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            right: 25,
-            child: MaterialButton(
-              onPressed: () {
-                showAvatarEditor();
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.width / 6.5,
-                width: MediaQuery.of(context).size.width / 6.5,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.black26,
-                ),
-                child: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            flex: 2,
           ),
         ],
       ),
     );
   }
-}
 
-class FireStorageService extends ChangeNotifier {
-  FireStorageService();
-  static Future<dynamic> loadImage(BuildContext context, String image) async {
-    return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+  Widget _getEditIcon() {
+    return GestureDetector(
+      child: CircleAvatar(
+        backgroundColor: Color(0xff8c52ff),
+        radius: 14.0,
+        child: Icon(
+          Icons.edit,
+          color: Colors.white,
+          size: 16.0,
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          _status = false;
+        });
+      },
+    );
   }
 }

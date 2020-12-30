@@ -159,7 +159,7 @@ class _RegisterViewState extends State<Register> {
             );
             User updateUser = FirebaseAuth.instance.currentUser;
             updateUser.updateProfile(displayName: _usernameController.text);
-            userSetup(_usernameController.text, user);
+            addUser(_usernameController.text, user);
             Navigator.of(context).pushNamed(AppRoutes.menu);
           } on FirebaseAuthException catch (err) {
             if (err.code == 'weak-password') {
