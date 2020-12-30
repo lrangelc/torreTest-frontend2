@@ -4,6 +4,7 @@ import 'package:torre_test2/theme/routes.dart';
 import 'package:torre_test2/views/profile_screen.dart';
 import 'package:torre_test2/views/video_screen.dart';
 import 'package:torre_test2/views/test_screen.dart';
+import 'package:torre_test2/views/jobs_screen.dart';
 
 import 'article_screen.dart';
 
@@ -41,7 +42,7 @@ class MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       floatingActionButton: null,
       body: DefaultTabController(
-        length: 4,
+        length: 5,
         child: Stack(
           children: <Widget>[
             Container(
@@ -53,6 +54,9 @@ class MenuScreenState extends State<MenuScreen> {
                 padding: EdgeInsets.only(bottom: 15),
                 child: TabBar(
                   tabs: <Widget>[
+                    Tab(
+                      icon: Icon(Icons.search_rounded),
+                    ),
                     Tab(
                       icon: Icon(Icons.video_library),
                     ),
@@ -66,17 +70,24 @@ class MenuScreenState extends State<MenuScreen> {
                       icon: Icon(Icons.account_circle),
                     ),
                   ],
-                  labelColor: Color(0xff8c52ff),
+                  labelColor: Color(
+                    0xff8c52ff,
+                  ),
                   indicator: UnderlineTabIndicator(
-                    borderSide:
-                        BorderSide(color: Color(0xff8c52ff), width: 4.0),
-                    insets: EdgeInsets.only(bottom: 44),
+                    borderSide: BorderSide(
+                      color: Color(0xff8c52ff),
+                      width: 4.0,
+                    ),
+                    insets: EdgeInsets.only(
+                      bottom: 44,
+                    ),
                   ),
                   unselectedLabelColor: Colors.grey,
                 ),
               ),
               body: TabBarView(
                 children: <Widget>[
+                  JobsScreen(),
                   VideoScreen(),
                   TestScreen(),
                   ArticleScreen(),
