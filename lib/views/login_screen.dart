@@ -74,8 +74,8 @@ class _LoginViewState extends State<Login> {
                               FirebaseAuth.instance.sendPasswordResetEmail(
                                   email: _emailControllerField.text);
                               Navigator.of(context).pop();
-                            } catch (e) {
-                              print(e);
+                            } catch (err) {
+                              print(err);
                               // TODO: Add snackbar reporting error
                             }
                           },

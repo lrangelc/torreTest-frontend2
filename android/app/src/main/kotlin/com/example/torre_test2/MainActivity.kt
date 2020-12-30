@@ -1,4 +1,4 @@
-package com.example.torre_test2
+package com.luisrangelc.torre_test2
 
 import io.flutter.embedding.android.FlutterActivity
 

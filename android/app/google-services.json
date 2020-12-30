@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1026444632385",
+    "firebase_url": "https://torretest-3df18.firebaseio.com",
+    "project_id": "torretest-3df18",
+    "storage_bucket": "torretest-3df18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026444632385:android:112b6ec8794a08049e41c0",
+        "android_client_info": {
+          "package_name": "com.luisrangelc.torre_test2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026444632385-tk4ue6o1lh0mv8jnov7tph853v1t250j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI8V9lDLWDk1mC9-IGp7V21jKeeGecQFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026444632385-tk4ue6o1lh0mv8jnov7tph853v1t250j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1026444632385-8vgg44bimp9svodnia99gcieu37lapu9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.luisrangelc.torreTest2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

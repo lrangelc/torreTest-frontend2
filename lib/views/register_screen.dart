@@ -37,7 +37,7 @@ class _RegisterViewState extends State<Register> {
             color: Colors.white,
           ),
         ),
-        hintText: "John Doe",
+        hintText: "John Wick",
         labelText: "Username",
         labelStyle: TextStyle(
           color: Colors.white,
@@ -159,16 +159,16 @@ class _RegisterViewState extends State<Register> {
             );
             User updateUser = FirebaseAuth.instance.currentUser;
             updateUser.updateProfile(displayName: _usernameController.text);
-            userSetup(_usernameController.text);
+            userSetup(_usernameController.text, user);
             Navigator.of(context).pushNamed(AppRoutes.menu);
-          } on FirebaseAuthException catch (e) {
-            if (e.code == 'weak-password') {
+          } on FirebaseAuthException catch (err) {
+            if (err.code == 'weak-password') {
               print('The password provided is too weak.');
-            } else if (e.code == 'email-already-in-use') {
+            } else if (err.code == 'email-already-in-use') {
               print('The account already exists for that email.');
             }
-          } catch (e) {
-            print(e.toString());
+          } catch (err) {
+            print(err.toString());
           }
         },
       ),
