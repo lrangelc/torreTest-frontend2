@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:torre_test2/theme/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,10 +21,22 @@ class OpeningViewState extends State<OpeningView> {
   }
 
   getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      displayName = prefs.getString('displayName');
-    });
+    try {
+      await Firebase.initializeApp();
+      FirebaseAuth.instance.authStateChanges().listen((User user) {
+        if (user != null) {
+          print('User is signed in!');
+          Navigator.of(context).pushNamed(AppRoutes.menu);
+        }
+      });
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        displayName = prefs.getString('displayName');
+      });
+    } catch (err) {
+      print(err.message);
+    }
   }
 
   @override

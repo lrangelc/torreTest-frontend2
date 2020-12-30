@@ -16,99 +16,100 @@ class TestScreenState extends State<TestScreen> {
   Widget build(BuildContext context) {
     void showAvatarEditor() {
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return CustomAlertDialog(
-              content: Container(
-                height: MediaQuery.of(context).size.height / 3,
-                width: MediaQuery.of(context).size.width / 1.2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          MaterialButton(
-                            onPressed: () {
-                              print("Selected 1");
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: Colors.white,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                height: MediaQuery.of(context).size.width / 5,
-                                child: Image.asset(
-                                  "avatar1.png",
-                                  height: 30,
-                                ),
+        context: context,
+        builder: (BuildContext context) {
+          return CustomAlertDialog(
+            content: Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width / 1.2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        MaterialButton(
+                          onPressed: () {
+                            print("Selected 1");
+                          },
+                          child: Material(
+                            borderRadius: BorderRadius.circular(25.0),
+                            color: Colors.white,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 5,
+                              height: MediaQuery.of(context).size.width / 5,
+                              child: Image.asset(
+                                "avatar1.png",
+                                height: 30,
                               ),
                             ),
-                          ),
-                          MaterialButton(
-                            onPressed: () {
-                              print("Selected 2");
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: Colors.white,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                height: MediaQuery.of(context).size.width / 5,
-                                child: Image.asset(
-                                  "avatar2.png",
-                                  height: 30,
-                                ),
-                              ),
-                            ),
-                          ),
-                          MaterialButton(
-                            onPressed: () {
-                              print("Selected 3");
-                            },
-                            child: Material(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: Colors.white,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 5,
-                                height: MediaQuery.of(context).size.width / 5,
-                                child: Image.asset(
-                                  "avatar3.png",
-                                  height: 30,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(25.0),
-                      color: Colors.white,
-                      child: MaterialButton(
-                        minWidth: MediaQuery.of(context).size.width / 2,
-                        padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 15.0),
-                        child: Text(
-                          "Close",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                        MaterialButton(
+                          onPressed: () {
+                            print("Selected 2");
+                          },
+                          child: Material(
+                            borderRadius: BorderRadius.circular(25.0),
+                            color: Colors.white,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 5,
+                              height: MediaQuery.of(context).size.width / 5,
+                              child: Image.asset(
+                                "avatar2.png",
+                                height: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+                            print("Selected 3");
+                          },
+                          child: Material(
+                            borderRadius: BorderRadius.circular(25.0),
+                            color: Colors.white,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 5,
+                              height: MediaQuery.of(context).size.width / 5,
+                              child: Image.asset(
+                                "avatar3.png",
+                                height: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Material(
+                    elevation: 5.0,
+                    borderRadius: BorderRadius.circular(25.0),
+                    color: Colors.white,
+                    child: MaterialButton(
+                      minWidth: MediaQuery.of(context).size.width / 2,
+                      padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 15.0),
+                      child: Text(
+                        "Close",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
               ),
-            );
-          });
+            ),
+          );
+        },
+      );
     }
 
     Future<Widget> _getImage(BuildContext context, String imageName) async {
@@ -217,19 +218,21 @@ class TestScreenState extends State<TestScreen> {
             left: MediaQuery.of(context).size.width / 2.8,
             top: MediaQuery.of(context).size.height / 7,
             child: Material(
-              borderRadius: BorderRadius.circular(25.0),
+              borderRadius: BorderRadius.circular(100),
               color: Colors.white,
               child: Container(
                 width: MediaQuery.of(context).size.width / 3.5,
                 height: MediaQuery.of(context).size.width / 3.5,
                 child: FutureBuilder(
-                    future: _getImage(context, "avatar3.png"),
+                    future: _getImage(context, "avatar2.png"),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          height: MediaQuery.of(context).size.width / 1.2,
-                          child: snapshot.data,
+                        return ClipOval(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            height: MediaQuery.of(context).size.width / 1.2,
+                            child: snapshot.data,
+                          ),
                         );
                       }
 

@@ -23,7 +23,7 @@ Future<DocumentSnapshot> getUser() async {
   return user;
 }
 
-Future<void> updateUser(String displayName) async {
+Future<void> updateUser(String displayName, String mobile) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser.uid.toString();
 
@@ -31,6 +31,7 @@ Future<void> updateUser(String displayName) async {
       FirebaseFirestore.instance.collection('users').doc(uid);
   users.update({
     'displayName': displayName,
+    'mobile': mobile,
   });
   return;
 }
