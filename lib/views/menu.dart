@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:torre_test2/views/profile_screen.dart';
 import 'package:torre_test2/views/video_screen.dart';
+import 'package:torre_test2/views/test_screen.dart';
 
 import 'article_screen.dart';
 
@@ -16,7 +17,7 @@ class MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       floatingActionButton: null,
       body: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Stack(
           children: <Widget>[
             Container(
@@ -35,6 +36,9 @@ class MenuScreenState extends State<MenuScreen> {
                       icon: Icon(Icons.insert_drive_file),
                     ),
                     Tab(
+                      icon: Icon(Icons.article),
+                    ),
+                    Tab(
                       icon: Icon(Icons.account_circle),
                     ),
                   ],
@@ -50,8 +54,9 @@ class MenuScreenState extends State<MenuScreen> {
               body: TabBarView(
                 children: <Widget>[
                   VideoScreen(),
-                  ProfileScreen(),
+                  TestScreen(),
                   ArticleScreen(),
+                  ProfileScreen(),
                 ],
               ),
             ),

@@ -17,17 +17,17 @@ class VideoScreenState extends State<VideoScreen> {
     return Scaffold(
       floatingActionButton: null,
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('videos').snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        stream: FirebaseFirestore.instance.collection('videos').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-            return ListView(
-              children: snapshot.data.docs.map((document) {
+          return ListView(
+            children: snapshot.data.docs.map(
+              (document) {
                 var url = document.data()['url'];
                 print("URL: $url");
                 YoutubePlayerController _controller = YoutubePlayerController(
@@ -52,9 +52,12 @@ class VideoScreenState extends State<VideoScreen> {
                             top: 20,
                             bottom: 5,
                           ),
-                          child: Text(document.data()['title'],
-                              style: GoogleFonts.quicksand(
-                                  fontStyle: FontStyle.normal)),
+                          child: Text(
+                            document.data()['title'],
+                            style: GoogleFonts.quicksand(
+                              fontStyle: FontStyle.normal,
+                            ),
+                          ),
                         ),
                         YoutubePlayer(
                           controller: _controller,
@@ -64,9 +67,11 @@ class VideoScreenState extends State<VideoScreen> {
                     ),
                   ),
                 );
-              }).toList(),
-            );
-          }),
+              },
+            ).toList(),
+          );
+        },
+      ),
     );
   }
 }
