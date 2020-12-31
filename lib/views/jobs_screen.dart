@@ -87,7 +87,7 @@ class _JobsScreenState extends State<JobsScreen> {
               textAlign: TextAlign.center,
               controller: _skill,
               decoration: const InputDecoration(
-                hintText: "Add a Skill",
+                hintText: "Add a Skill or more than one, separate by comma",
               ),
             ),
           ),
