@@ -12,7 +12,8 @@ class _JobsScreenState extends State<JobsScreen> {
   var jobs = <Job>[];
   TextEditingController _minimumSalary;
   TextEditingController _skill;
-  String jobsFounded = '';
+  String jobsFound = '';
+  bool loading = false;
 
   String selectedMenuOption;
   List<String> baseMenuOptions = ['Apply'];
@@ -21,6 +22,9 @@ class _JobsScreenState extends State<JobsScreen> {
 
   _getJobs() {
     try {
+      setState(() {
+        this.loading = true;
+      });
       API.getJobs(this._minimumSalary.text, this._skill.text).then((response) {
         setState(() {
           var jsonResponse = convert.jsonDecode(response.body);
@@ -28,7 +32,8 @@ class _JobsScreenState extends State<JobsScreen> {
           Iterable list = itemJobs;
 
           jobs = list.map((model) => Job.fromJson(model)).toList();
-          jobsFounded = 'Jobs founded: ${jobs.length}';
+          jobsFound = 'Jobs Found: ${jobs.length}';
+          this.loading = false;
         });
       });
     } catch (err) {
@@ -105,7 +110,8 @@ class _JobsScreenState extends State<JobsScreen> {
               ],
             ),
           ),
-          Text(jobsFounded),
+          Text(jobsFound),
+          if (loading) CircularProgressIndicator(),
           SizedBox(
             height: 20,
           ),
