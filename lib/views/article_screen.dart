@@ -23,6 +23,11 @@ class ArticleScreenState extends State<ArticleScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Torredium.com"),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xff8c52ff),
+      ),
       floatingActionButton: null,
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('articles').snapshots(),

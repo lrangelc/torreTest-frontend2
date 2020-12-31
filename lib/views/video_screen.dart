@@ -15,6 +15,11 @@ class VideoScreenState extends State<VideoScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Improve your Attitudes and Skills"),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xff8c52ff),
+      ),
       floatingActionButton: null,
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('videos').snapshots(),

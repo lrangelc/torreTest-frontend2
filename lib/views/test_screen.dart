@@ -151,6 +151,11 @@ class TestScreenState extends State<TestScreen> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Technical Tests"),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xff8c52ff),
+      ),
       floatingActionButton: null,
       body: Stack(
         children: <Widget>[

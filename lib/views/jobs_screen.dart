@@ -14,6 +14,11 @@ class _JobsScreenState extends State<JobsScreen> {
   TextEditingController _skill;
   String jobsFounded = '';
 
+  String selectedMenuOption;
+  List<String> baseMenuOptions = ['Apply'];
+
+  final GlobalKey _menuKey = GlobalKey();
+
   _getJobs() {
     try {
       API.getJobs(this._minimumSalary.text, this._skill.text).then((response) {
@@ -45,6 +50,16 @@ class _JobsScreenState extends State<JobsScreen> {
 
   @override
   build(context) {
+    /// The list containing the [PopUpMenuItem]s
+    List<PopupMenuItem> menuOptions = [];
+
+    for (String menuOption in baseMenuOptions) {
+      menuOptions.add(new PopupMenuItem(
+        child: new Text("$menuOption"),
+        value: menuOption,
+      ));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Jobs List"),
@@ -106,6 +121,19 @@ class _JobsScreenState extends State<JobsScreen> {
                   subtitle: Text(
                     '${jobs[index].type}',
                   ),
+                  trailing: new PopupMenuButton(
+                    key: GlobalKey(debugLabel: jobs[index].id),
+                    onSelected: (selectedDropDownItem) => handlePopUpChanged(
+                        selectedDropDownItem, jobs[index].id),
+                    itemBuilder: (BuildContext context) => menuOptions,
+                    tooltip: "Tap me to apply.",
+                  ),
+                  onTap: () {
+                    dynamic popUpMenustate = _menuKey.currentState;
+                    if (popUpMenustate != null) {
+                      popUpMenustate.showButtonMenu();
+                    }
+                  },
                 );
               },
             ),
@@ -113,5 +141,16 @@ class _JobsScreenState extends State<JobsScreen> {
         ],
       ),
     );
+  }
+
+  /// When a [PopUpMenuItem] is selected, we assign its value to
+  /// selectedLuckyNumber and rebuild the widget.
+  void handlePopUpChanged(String value, String id) {
+    setState(() {
+      selectedMenuOption = value;
+    });
+
+    /// Log the selected lucky number to the console.
+    print("The job option you selected was $selectedMenuOption id: $id");
   }
 }
