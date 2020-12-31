@@ -80,6 +80,10 @@ class _JobsScreenState extends State<JobsScreen> {
             child: TextField(
               textAlign: TextAlign.center,
               controller: _minimumSalary,
+              textInputAction: TextInputAction.go,
+              onSubmitted: (value) {
+                _getJobs();
+              },
               decoration: const InputDecoration(
                 hintText: "Enter Minimun Salary",
               ),
@@ -93,6 +97,10 @@ class _JobsScreenState extends State<JobsScreen> {
             child: TextField(
               textAlign: TextAlign.center,
               controller: _skill,
+              textInputAction: TextInputAction.go,
+              onSubmitted: (value) {
+                _getJobs();
+              },
               decoration: const InputDecoration(
                 hintText: "Add a Skill or more than one, separate by comma",
               ),
@@ -135,7 +143,11 @@ class _JobsScreenState extends State<JobsScreen> {
                         selectedDropDownItem,
                         jobs[index].id,
                         jobs[index].objective,
-                        jobs[index].type),
+                        jobs[index].type,
+                        jobs[index].currency,
+                        jobs[index].minAmount,
+                        jobs[index].maxAmount,
+                        jobs[index].skills),
                     itemBuilder: (BuildContext context) => menuOptions,
                     tooltip: "Tap me to apply.",
                   ),
@@ -157,11 +169,18 @@ class _JobsScreenState extends State<JobsScreen> {
   /// When a [PopUpMenuItem] is selected, we assign its value to
   /// selectedLuckyNumber and rebuild the widget.
   void handlePopUpChanged(
-      String value, String jobID, String objective, String type) {
+      String value,
+      String jobID,
+      String objective,
+      String type,
+      String currency,
+      double minAmount,
+      double maxAmount,
+      List<dynamic> skills) {
     setState(() {
       selectedMenuOption = value;
     });
-    applyJob(jobID, objective, type);
+    applyJob(jobID, objective, type, currency, minAmount, maxAmount, skills);
 
     /// Log the selected lucky number to the console.
     print("The job option you selected was $selectedMenuOption id: $jobID");

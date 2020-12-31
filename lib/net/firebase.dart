@@ -36,7 +36,14 @@ Future<void> updateUser(String displayName, String mobile) async {
   return;
 }
 
-Future<void> applyJob(String jobID, String objective, String type) async {
+Future<void> applyJob(
+    String jobID,
+    String objective,
+    String type,
+    String currency,
+    double minAmount,
+    double maxAmount,
+    List<dynamic> skills) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser.uid.toString();
 
@@ -47,34 +54,13 @@ Future<void> applyJob(String jobID, String objective, String type) async {
     'jobID': jobID,
     'objective': objective,
     'type': type,
+    'currency': currency,
+    'minAmount': minAmount,
+    'maxAmount': maxAmount,
+    'skills': skills,
     'createdBy': uid,
     'createdAt': FieldValue.serverTimestamp(),
     'status': 'ACTIVE'
   });
   return;
 }
-
-// applyJob(userID: string, jobID: string, jobData: any): Promise<any> {
-//     try {
-//       const data = {
-//         ...jobData,
-//         userID,
-//         jobID,
-//         createdBy: userID,
-//         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-//         status: 'ACTIVE',
-//       };
-
-//       return new Promise<any>((resolve, reject) => {
-//         this.angularFirestore
-//           .collection('appliedJobs')
-//           .add(data)
-//           .then(
-//             (res) => {},
-//             (err) => reject(err)
-//           );
-//       });
-//     } catch (err) {
-//       handleHttpResponseError(err);
-//     }
-//   }

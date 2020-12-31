@@ -7,11 +7,14 @@ const baseUrl =
 class API {
   static Future<http.Response> getJobs(String minimumSalary, String skills) {
     try {
-      String maxAmount = (double.parse(minimumSalary) + 2000).toString();
       String url =
           'https://search.torre.co/opportunities/_search/?offset=0&size=100&page=1';
-      String compensationrange =
-          '{"compensationrange":{"minAmount":$minimumSalary,"maxAmount":$maxAmount,"currency":"USD\$","periodicity":"monthly"}}';
+      String compensationrange = '';
+      if (double.parse(minimumSalary) > 0) {
+        String maxAmount = (double.parse(minimumSalary) + 2000).toString();
+        compensationrange =
+            '{"compensationrange":{"minAmount":$minimumSalary,"maxAmount":$maxAmount,"currency":"USD\$","periodicity":"monthly"}}';
+      }
 
       String addSkills = '';
       if (skills.length > 0) {

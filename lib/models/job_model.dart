@@ -5,6 +5,7 @@ class Job {
   String currency;
   double minAmount;
   double maxAmount;
+  List<dynamic> skills;
 
   Job(
       {String id,
@@ -12,13 +13,15 @@ class Job {
       String type,
       String currency,
       double minAmount,
-      double maxAmount}) {
+      double maxAmount,
+      List<dynamic> skills}) {
     this.id = id;
     this.objective = objective;
     this.type = type;
     this.currency = currency;
     this.minAmount = minAmount;
     this.maxAmount = maxAmount;
+    this.skills = skills;
   }
 
   Job.fromJson(Map json) {
@@ -26,6 +29,7 @@ class Job {
       id = json['id'];
       objective = json['objective'];
       type = json['type'];
+      skills = json['skills'];
       currency = '?';
       minAmount = 0;
       maxAmount = 0;
@@ -51,7 +55,8 @@ class Job {
       'type': type,
       'currency': currency,
       'minAmount': minAmount,
-      'maxAmount': maxAmount
+      'maxAmount': maxAmount,
+      'skills': skills,
     };
   }
 }
