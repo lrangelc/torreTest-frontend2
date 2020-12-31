@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:torre_test2/models/job_model.dart';
 import 'package:torre_test2/net/API.dart';
+import 'package:torre_test2/net/firebase.dart';
 
 class JobsScreen extends StatefulWidget {
   @override
@@ -32,6 +33,7 @@ class _JobsScreenState extends State<JobsScreen> {
           Iterable list = itemJobs;
 
           jobs = list.map((model) => Job.fromJson(model)).toList();
+          jobs.sort((a, b) => b.minAmount.compareTo(a.minAmount));
           jobsFound = 'Jobs Found: ${jobs.length}';
           this.loading = false;
         });
@@ -125,12 +127,15 @@ class _JobsScreenState extends State<JobsScreen> {
                     '${jobs[index].objective}',
                   ),
                   subtitle: Text(
-                    '${jobs[index].type}',
+                    '${jobs[index].type} 💰 ${jobs[index].currency} ${jobs[index].minAmount} 🤑 ${jobs[index].maxAmount}',
                   ),
                   trailing: new PopupMenuButton(
                     key: GlobalKey(debugLabel: jobs[index].id),
                     onSelected: (selectedDropDownItem) => handlePopUpChanged(
-                        selectedDropDownItem, jobs[index].id),
+                        selectedDropDownItem,
+                        jobs[index].id,
+                        jobs[index].objective,
+                        jobs[index].type),
                     itemBuilder: (BuildContext context) => menuOptions,
                     tooltip: "Tap me to apply.",
                   ),
@@ -151,12 +156,14 @@ class _JobsScreenState extends State<JobsScreen> {
 
   /// When a [PopUpMenuItem] is selected, we assign its value to
   /// selectedLuckyNumber and rebuild the widget.
-  void handlePopUpChanged(String value, String id) {
+  void handlePopUpChanged(
+      String value, String jobID, String objective, String type) {
     setState(() {
       selectedMenuOption = value;
     });
+    applyJob(jobID, objective, type);
 
     /// Log the selected lucky number to the console.
-    print("The job option you selected was $selectedMenuOption id: $id");
+    print("The job option you selected was $selectedMenuOption id: $jobID");
   }
 }

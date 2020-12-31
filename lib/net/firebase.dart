@@ -35,3 +35,46 @@ Future<void> updateUser(String displayName, String mobile) async {
   });
   return;
 }
+
+Future<void> applyJob(String jobID, String objective, String type) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String uid = auth.currentUser.uid.toString();
+
+  DocumentReference appliedJobs =
+      FirebaseFirestore.instance.collection('appliedJobs').doc();
+  appliedJobs.set({
+    'userID': uid,
+    'jobID': jobID,
+    'objective': objective,
+    'type': type,
+    'createdBy': uid,
+    'createdAt': FieldValue.serverTimestamp(),
+    'status': 'ACTIVE'
+  });
+  return;
+}
+
+// applyJob(userID: string, jobID: string, jobData: any): Promise<any> {
+//     try {
+//       const data = {
+//         ...jobData,
+//         userID,
+//         jobID,
+//         createdBy: userID,
+//         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+//         status: 'ACTIVE',
+//       };
+
+//       return new Promise<any>((resolve, reject) => {
+//         this.angularFirestore
+//           .collection('appliedJobs')
+//           .add(data)
+//           .then(
+//             (res) => {},
+//             (err) => reject(err)
+//           );
+//       });
+//     } catch (err) {
+//       handleHttpResponseError(err);
+//     }
+//   }
