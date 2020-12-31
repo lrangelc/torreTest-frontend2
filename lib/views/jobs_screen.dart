@@ -2,7 +2,6 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:torre_test2/models/job_model.dart';
 import 'package:torre_test2/net/API.dart';
-import 'package:torre_test2/utils/size_config.dart';
 
 class JobsScreen extends StatefulWidget {
   @override
@@ -11,16 +10,20 @@ class JobsScreen extends StatefulWidget {
 
 class _JobsScreenState extends State<JobsScreen> {
   var jobs = <Job>[];
+  TextEditingController _minimumSalary;
+  TextEditingController _skill;
+  String jobsFounded = '';
 
   _getJobs() {
     try {
-      API.getJobs().then((response) {
+      API.getJobs(this._minimumSalary.text, this._skill.text).then((response) {
         setState(() {
           var jsonResponse = convert.jsonDecode(response.body);
           var itemJobs = jsonResponse['results'];
           Iterable list = itemJobs;
 
           jobs = list.map((model) => Job.fromJson(model)).toList();
+          jobsFounded = 'Jobs founded: ${jobs.length}';
         });
       });
     } catch (err) {
@@ -30,7 +33,10 @@ class _JobsScreenState extends State<JobsScreen> {
 
   initState() {
     super.initState();
-    _getJobs();
+    _minimumSalary = TextEditingController();
+    _skill = TextEditingController();
+    _minimumSalary.text = '1000';
+    _skill.text = '';
   }
 
   dispose() {
@@ -43,42 +49,62 @@ class _JobsScreenState extends State<JobsScreen> {
       appBar: AppBar(
         title: Text("Jobs List"),
         automaticallyImplyLeading: false,
+        backgroundColor: Color(0xff8c52ff),
       ),
       body: Column(
         children: [
-          Text('Hi Friend!!!'),
-          RaisedButton(
-            onPressed: () {},
-            color: Theme.of(context).accentColor,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(SizeConfig.safeBlockHorizontal * 5,
-                  0, SizeConfig.safeBlockHorizontal * 5, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                  )
-                ],
+          Text('Minimum Salary:'),
+          Center(
+            child: TextField(
+              textAlign: TextAlign.center,
+              controller: _minimumSalary,
+              decoration: const InputDecoration(
+                hintText: "Enter Minimun Salary",
               ),
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Text('Skills:'),
+          Center(
+            child: TextField(
+              textAlign: TextAlign.center,
+              controller: _skill,
+              decoration: const InputDecoration(
+                hintText: "Add a Skill",
+              ),
+            ),
+          ),
+          Center(
+            child: ButtonBar(
+              mainAxisSize: MainAxisSize
+                  .min, // this will take space as minimum as posible(to center)
+              children: <Widget>[
+                RaisedButton(
+                  child: Text('Search'),
+                  onPressed: () {
+                    _getJobs();
+                  },
+                ),
+              ],
+            ),
+          ),
+          Text(jobsFounded),
+          SizedBox(
+            height: 20,
+          ),
+          Divider(),
           Expanded(
             child: ListView.builder(
               itemCount: jobs.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(
-                    jobs[index].objective,
+                    '${jobs[index].objective}',
+                  ),
+                  subtitle: Text(
+                    '${jobs[index].type}',
                   ),
                 );
               },

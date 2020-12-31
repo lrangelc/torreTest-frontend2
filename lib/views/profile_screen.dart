@@ -63,6 +63,11 @@ class MapScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Profile"),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xff8c52ff),
+      ),
       body: Container(
         color: Colors.white,
         child: ListView(
@@ -74,30 +79,6 @@ class MapScreenState extends State<ProfileScreen>
                   color: Colors.white,
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 20.0, top: 20.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.black,
-                              size: 22.0,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 25.0),
-                              child: Text(
-                                'Profile',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.only(top: 20.0),
                         child: Stack(
