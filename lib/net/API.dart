@@ -17,10 +17,10 @@ class API {
       }
 
       String addSkills = '';
-      if (skills.length > 0) {
+      if (skills.trim().length > 0) {
         List<String> listSkills = skills.split(",");
         listSkills.forEach((element) {
-          if (element.length > 0) {
+          if (element.trim().length > 0) {
             addSkills +=
                 ',{"skill/role":{"text":"${element.trim()}","experience":"potential-to-develop"}}';
           }
